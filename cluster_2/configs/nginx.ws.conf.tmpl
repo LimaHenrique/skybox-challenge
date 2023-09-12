@@ -1,0 +1,23 @@
+user  nginx;
+worker_processes  1;
+
+error_log  /var/log/nginx/error.log warn;
+pid        /var/run/nginx.pid;
+
+events {
+    worker_connections  1024;
+}
+
+http {
+    server {
+        listen 80; # Listen on port 80 for incoming HTTP requests.
+        location / {
+            access_log off; # Disable access logging for this location.
+            return 200 'Hello from ${MESSAGE}'; # Return a plain text response with a dynamic message.
+            add_header Content-Type text/plain; # Add a Content-Type header.
+        }
+        location /health {
+            return 200 '${MESSAGE}'; # Return a dynamic health check response.
+        }
+    }
+}

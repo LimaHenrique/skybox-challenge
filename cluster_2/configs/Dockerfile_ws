@@ -1,0 +1,14 @@
+# Pull image from docker hub
+FROM nginx:1.25.1
+
+# Copy the template
+COPY ./nginx.ws.conf.tmpl /nginx.conf.template
+
+# Copy the entrypoint
+COPY ./entrypoint.sh /entrypoint.sh
+
+# Set entrypoint as runnable
+RUN chmod +x /entrypoint.sh
+
+# Set entrypoint.sh as entrypoint command
+ENTRYPOINT ["/entrypoint.sh"]

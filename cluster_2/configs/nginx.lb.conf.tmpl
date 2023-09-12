@@ -1,0 +1,29 @@
+user  nginx;
+worker_processes  1;
+
+error_log  /var/log/nginx/error.log warn;
+pid        /var/run/nginx.pid;
+
+events {
+    worker_connections  1024;
+}
+
+http {
+    # Define an upstream block named 'myapp' for load balancing web servers.
+    upstream myapp {
+        server cluster_2_web_server_1 weight=1;
+server cluster_2_web_server_2 weight=1;
+server cluster_2_web_server_3 weight=3;
+    }
+
+    server {
+        listen 80; # Listen on port 80 for incoming HTTP requests.
+
+        location / {
+            proxy_pass http://myapp; # Proxy incoming requests to the 'myapp' upstream.
+        }
+        location /health {
+            return 200 "load-balancer"; # Return a health check response.
+        }
+    }
+}
